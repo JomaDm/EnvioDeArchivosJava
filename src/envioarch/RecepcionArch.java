@@ -39,7 +39,7 @@ public class RecepcionArch {
         byte[] b = new byte[tam_buffer];
 
         for (int i = 0; i < numero_archivos; i++) {
-          String nombre_archivo = dis.readUTF();
+          String nombre_archivo = dis.readUTF().trim();
           System.out.println("Nombre del archivo " + (i + 1) + ": " + nombre_archivo);
 
           long tam_archivo = dis.readLong();
@@ -54,12 +54,9 @@ public class RecepcionArch {
             recibidos = recibidos + n;
             porcentaje = (int) (recibidos * 100 / tam_archivo);
             System.out.print("Recibido: " + porcentaje + "%\r");
-            if (recibidos == tam_archivo) {
-              System.out.println("\nArchivo " + nombre_archivo + " recibido.");
-              dos.flush();
-            }            
+                      
           }//While
-          dis.read();
+          //dis.read();
           System.out.println("");
           dos.close();
         }

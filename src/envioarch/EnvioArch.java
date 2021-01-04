@@ -16,8 +16,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class EnvioArch {
-    public static String host_default = "201.124.122.167";
-    //public static String host_default = "127.0.0.1";
+    //public static String host_default = "201.124.122.167";
+    public static String host_default = "127.0.0.1";
     public static int puerto_default = 8000; 
     
     public static void main(String[] args) {
@@ -31,7 +31,7 @@ public class EnvioArch {
             System.out.println("Bytes: "+numBytes);
             System.out.println("Nagle: "+nagle);
             Socket cl = new Socket(host, pto);
-            DataOutputStream dos = new DataOutputStream(cl.getOutputStream());
+            
 
             JFileChooser jf = new JFileChooser();
             jf.setMultiSelectionEnabled(true);
@@ -41,7 +41,7 @@ public class EnvioArch {
             if (r == JFileChooser.APPROVE_OPTION) {
                 int numArchivos = files.length;
                 System.out.println("Numero de Archivos: "+numArchivos);   
-                
+                DataOutputStream dos = new DataOutputStream(cl.getOutputStream());
                 //mandamos un mensaje con parametros
                 dos.writeInt(numArchivos);
                 dos.flush();
@@ -51,7 +51,7 @@ public class EnvioArch {
                 //mandamos los archivos
                 for(int i=0;i<files.length;i++){                 
                     String archivo = files[i].getAbsolutePath(); //Dirección
-                    String nombre = files[i].getName(); //Nombre
+                    String nombre = files[i].getName().toString(); //Nombre
                     long tam = files[i].length();  //Tamaño
    
                     System.out.println("Name: "+nombre);
@@ -75,8 +75,8 @@ public class EnvioArch {
                         System.out.print("Enviado: " + porcentaje + "%\r");
                     }
                     System.out.print("\nArchivo #"+(i+1)+" enviado\n\n");
-                    dis.close();
-                    dos.flush();
+                    dis.close();                    
+                    //dos.flush();
                 }
                 dos.close();
                 cl.close();    
