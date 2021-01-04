@@ -54,10 +54,10 @@ public class RecepcionArch {
             recibidos = recibidos + n;
             porcentaje = (int) (recibidos * 100 / tam_archivo);
             System.out.print("Recibido: " + porcentaje + "%\r");
-                      
           }//While
           //dis.read();
-          System.out.println("");
+          System.out.println("Archivo " + nombre_archivo + " Recibido");
+
           dos.close();
         }
 
