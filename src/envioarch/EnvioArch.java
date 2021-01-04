@@ -1,5 +1,6 @@
 package envioarch;
 
+import java.awt.GridLayout;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -7,14 +8,28 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 public class EnvioArch {
+    public static String host_default = "201.124.122.167";
+    //public static String host_default = "127.0.0.1";
+    public static int puerto_default = 8000;
+    
     public static void main(String[] args) {
         try {
-            //String host = "201.124.122.167";
-            String host = "localhost";
-            int pto = 8000;
+            String host = host_default;
+            int pto = puerto_default;
+            
+            String datos[] = obtenerDatos();
+            int numBytes = Integer.parseInt(datos[0]);
+            String nagle = datos[1];
+            System.out.println("bytes: "+numBytes);
+            System.out.println("nagle: "+nagle);
             Socket cl = new Socket(host, pto);
             DataOutputStream dos = new DataOutputStream(cl.getOutputStream());
 
@@ -25,7 +40,6 @@ public class EnvioArch {
                         
             if (r == JFileChooser.APPROVE_OPTION) {
                 int numArchivos = files.length;
-                int numBytes = 1024;
                 System.out.println("Numero de Archivos: "+numArchivos);   
                 
                 //mandamos un mensaje con parametros
@@ -40,6 +54,9 @@ public class EnvioArch {
                     String nombre = files[i].getName(); //Nombre
                     long tam = files[i].length();  //Tamaño
    
+                    System.out.println("Name: "+nombre);
+                    System.out.println("Path: "+archivo);
+                    
                     dos.writeUTF(nombre);
                     dos.flush();
                     dos.writeLong(tam);
@@ -57,8 +74,9 @@ public class EnvioArch {
                         porcentaje = (int) (enviados * 100 / tam);
                         System.out.print("Enviado: " + porcentaje + "%\r");
                     }
-                    System.out.print("\n\nArchivo #"+(i+1)+" enviado\n");
+                    System.out.print("\nArchivo #"+(i+1)+" enviado\n\n");
                     dis.close();
+                    dos.flush();
                 }
                 dos.close();
                 cl.close();    
@@ -66,5 +84,29 @@ public class EnvioArch {
         } catch (Exception e) {
           e.printStackTrace();
         }
-    } 
+    }
+    
+    private static String[] obtenerDatos() {
+        String s[]=new String[2];
+
+        JTextField bytes = new JTextField(20);
+        JCheckBox check = new JCheckBox("Nagle",true);
+        bytes.setText("1024");
+        
+        JPanel myPanel = new JPanel();
+        myPanel.setLayout(new GridLayout(2, 2));
+        myPanel.add(new JLabel("Bytes en buffer:"));
+        myPanel.add(bytes);
+        myPanel.add(new JLabel("¿Usar Nagle?:"));
+        myPanel.add(check);
+        
+        int result = JOptionPane.showConfirmDialog(null, myPanel, 
+                 "Configuración de comunicación", JOptionPane.OK_CANCEL_OPTION);
+        if (result == JOptionPane.OK_OPTION) {
+                s[0] = bytes.getText();
+                if(check.isSelected()) s[1] = "SI";
+                else s[1] = "NO";
+        }else System.exit(0);
+        return s;
+    }    
 }
