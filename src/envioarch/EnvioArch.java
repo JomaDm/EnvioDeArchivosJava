@@ -18,7 +18,7 @@ import javax.swing.JTextField;
 public class EnvioArch {
     public static String host_default = "201.124.122.167";
     //public static String host_default = "127.0.0.1";
-    public static int puerto_default = 8000;
+    public static int puerto_default = 8000; 
     
     public static void main(String[] args) {
         try {
@@ -28,8 +28,8 @@ public class EnvioArch {
             String datos[] = obtenerDatos();
             int numBytes = Integer.parseInt(datos[0]);
             String nagle = datos[1];
-            System.out.println("bytes: "+numBytes);
-            System.out.println("nagle: "+nagle);
+            System.out.println("Bytes: "+numBytes);
+            System.out.println("Nagle: "+nagle);
             Socket cl = new Socket(host, pto);
             DataOutputStream dos = new DataOutputStream(cl.getOutputStream());
 
