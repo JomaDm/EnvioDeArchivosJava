@@ -19,8 +19,8 @@ import javax.swing.JTextField;
 
 public class EnvioArch {
     //public static String host_default = "201.124.138.119";
-    public static String host_default = "127.0.0.1";
-    public static int puerto_default = 8005;
+    public static String host_default = "201.124.138.119";
+    public static int puerto_default = 8000;
 
     public static void main(String[] args) {
     try {

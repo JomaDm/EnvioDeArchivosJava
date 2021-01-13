@@ -13,10 +13,10 @@ import java.util.zip.ZipInputStream;
 
 public class Recepcion_envio {
     //recibir
-    public static int puerto_recibir = 8005;
+    public static int puerto_recibir = 8000;
     //enviar
     public static int puerto_enviar  = 5160;
-    public static String host_enviar = "201.124.138.119";
+    public static String host_enviar = "localhost";
     //public static String host_enviar = "127.0.0.1";
     
     public static void main(String[] args) throws IOException {

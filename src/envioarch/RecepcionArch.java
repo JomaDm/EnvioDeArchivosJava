@@ -37,7 +37,7 @@ public class RecepcionArch {
         long tam_archivo = dis.readLong();
         System.out.println("Tamaño del archivo: " + tam_archivo);
         String nombre_archivo = dis.readUTF();
-        System.out.println("Nombre del archivo: " + nombre_archivo);
+        //System.out.println("Nombre del archivo: " + nombre_archivo);
 
         byte[] b = new byte[tam_buffer];
         long recibidos = 0;
