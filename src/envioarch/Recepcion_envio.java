@@ -90,25 +90,23 @@ public class Recepcion_envio {
                   System.out.print("Enviado: " + porcentaje2 + "%\r");          
                 }
                 System.out.print("\nArchivo "+nombre_archivo+" reenviado\n\n");
-                descomprimirArchivos(new File("temp.zip"), carpeta);
                 //Cerrar Streams
                 dos.close();
                 dis.close();
                 dos2.close();
                 dis2.close();
+                descomprimirArchivos(new File("temp.zip"), carpeta);
             }
             
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    public static void descomprimirArchivos(File zip, String carpeta) {
+     public static void descomprimirArchivos(File zip, String carpeta) {
     String directorioZip = carpeta + "/";
     try {
       ZipInputStream zis = new ZipInputStream(new FileInputStream(directorioZip + zip.getName()));
       ZipEntry salida;
-      
-      //recorre todo el buffer extrayendo uno a uno cada archivo.zip y creándolos de nuevo en su archivo original 
       while (null != (salida = zis.getNextEntry())) {
         System.out.println("Nombre del Archivo: " + salida.getName());
         FileOutputStream fos = new FileOutputStream(directorioZip + salida.getName());
@@ -120,7 +118,7 @@ public class Recepcion_envio {
         fos.close();
         zis.closeEntry();
       }     
-      zis.close();
+      zis.close();   
     } catch (Exception e) {
       e.printStackTrace();
     } finally {

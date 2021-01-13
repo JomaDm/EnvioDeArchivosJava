@@ -67,8 +67,6 @@ public class RecepcionArch {
     try {
       ZipInputStream zis = new ZipInputStream(new FileInputStream(directorioZip + zip.getName()));
       ZipEntry salida;
-      
-      //recorre todo el buffer extrayendo uno a uno cada archivo.zip y creándolos de nuevo en su archivo original 
       while (null != (salida = zis.getNextEntry())) {
         System.out.println("Nombre del Archivo: " + salida.getName());
         FileOutputStream fos = new FileOutputStream(directorioZip + salida.getName());
@@ -80,7 +78,7 @@ public class RecepcionArch {
         fos.close();
         zis.closeEntry();
       }     
-      zis.close();
+      zis.close(); 
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
