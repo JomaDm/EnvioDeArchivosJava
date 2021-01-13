@@ -33,7 +33,8 @@ public class EnvioArch {
       System.out.println("Bytes: " + numBytes);
       System.out.println("Nagle: " + nagle);
       Socket cl = new Socket(host, pto);
-
+      if(nagle.equals("NO")) cl.setTcpNoDelay(true);
+      
       JFileChooser jf = new JFileChooser();
       jf.setMultiSelectionEnabled(true);
       int r = jf.showOpenDialog(null);
