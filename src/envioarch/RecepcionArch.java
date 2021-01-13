@@ -36,7 +36,7 @@ public class RecepcionArch {
         int tam_buffer = dis.readInt();
         System.out.println("Tamaño del buffer: " + tam_buffer);
 
-        byte[] b = new byte[tam_buffer];
+        
 
         for (int i = 0; i < numero_archivos; i++) {
           String nombre_archivo = dis.readUTF();
@@ -48,6 +48,7 @@ public class RecepcionArch {
           int n, porcentaje;
           DataOutputStream dos = new DataOutputStream(new FileOutputStream(carpeta + "/" + nombre_archivo));
           while (recibidos < tam_archivo) {
+            byte[] b = new byte[tam_buffer];
             n = dis.read(b);
             dos.write(b, 0, n);
             dos.flush();
