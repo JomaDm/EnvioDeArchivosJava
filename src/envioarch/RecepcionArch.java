@@ -1,16 +1,12 @@
 package envioarch;
-//189.216.151.20
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -18,8 +14,7 @@ public class RecepcionArch {
 
   public static void main(String[] args) {
     try {
-      int puerto = 8000;
-      //String ip = "localhost";
+      int puerto = 5160;
       ServerSocket ss = new ServerSocket(puerto);
       String carpeta = "./archivos_recibidos";
       File directorio = new File(carpeta);
@@ -39,16 +34,12 @@ public class RecepcionArch {
 
         int tam_buffer = dis.readInt();
         System.out.println("Tamaño del buffer: " + tam_buffer);
-
         long tam_archivo = dis.readLong();
         System.out.println("Tamaño del archivo: " + tam_archivo);
-
-        //dis = new DataInputStream(socket.getInputStream());
         String nombre_archivo = dis.readUTF();
         System.out.println("Nombre del archivo: " + nombre_archivo);
 
         byte[] b = new byte[tam_buffer];
-
         long recibidos = 0;
         int n, porcentaje;
         DataOutputStream dos = new DataOutputStream(new FileOutputStream(carpeta + "/" + nombre_archivo));
@@ -65,9 +56,7 @@ public class RecepcionArch {
         dis.close();
 
         descomprimirArchivos(new File("temp.zip"), carpeta);
-
       }
-
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -76,10 +65,9 @@ public class RecepcionArch {
   public static void descomprimirArchivos(File zip, String carpeta) {
     String directorioZip = carpeta + "/";
     try {
-      //crea un buffer temporal para el archivo que se va descomprimir
       ZipInputStream zis = new ZipInputStream(new FileInputStream(directorioZip + zip.getName()));
-
       ZipEntry salida;
+      
       //recorre todo el buffer extrayendo uno a uno cada archivo.zip y creándolos de nuevo en su archivo original 
       while (null != (salida = zis.getNextEntry())) {
         System.out.println("Nombre del Archivo: " + salida.getName());
@@ -93,13 +81,11 @@ public class RecepcionArch {
         zis.closeEntry();
       }     
       zis.close();
-      
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
       File z  = new File(directorioZip + zip.getName());
       z.delete();
     }
-
   }
 }

@@ -1,15 +1,12 @@
 package envioarch;
 
 import java.awt.GridLayout;
-import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -21,12 +18,11 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class EnvioArch {
-  //public static String host_default = "201.124.122.167";
+    //public static String host_default = "201.124.138.119";
+    public static String host_default = "127.0.0.1";
+    public static int puerto_default = 8005;
 
-  public static String host_default = "127.0.0.1";
-  public static int puerto_default = 8000;
-
-  public static void main(String[] args) {
+    public static void main(String[] args) {
     try {
       String host = host_default;
       int pto = puerto_default;
@@ -51,11 +47,9 @@ public class EnvioArch {
         File zip = comprimirArchivos(files);
         dos.writeInt(numBytes); //No bytes
         dos.flush();       
-        
         long tam = zip.length();  //Tamaño
         dos.writeLong(tam);
         dos.flush();
-        
         dos.writeUTF(zip.getName()); //Nombre
         dos.flush();
         
@@ -85,39 +79,24 @@ public class EnvioArch {
 
   private static File comprimirArchivos(File[] archivos) {
     String zipFile = archivos[0].getPath().replace(archivos[0].getName(), "") + "temp.zip";
-    
     try {
+        byte[] buffer = new byte[65536];
+        FileOutputStream fos = new FileOutputStream(zipFile);
+        ZipOutputStream zos = new ZipOutputStream(fos);
 
-      // create byte buffer
-      byte[] buffer = new byte[65536];
-
-      FileOutputStream fos = new FileOutputStream(zipFile);
-
-      ZipOutputStream zos = new ZipOutputStream(fos);
-
-      for (int i = 0; i < archivos.length; i++) {
-
-        //File srcFile = new File(srcFiles[i]);
-        FileInputStream fis = new FileInputStream(archivos[i]);
-
-        // begin writing a new ZIP entry, positions the stream to the start of the entry data
-        zos.putNextEntry(new ZipEntry(archivos[i].getName()));
-
-        int length;
-
-        while ((length = fis.read(buffer)) > 0) {
-          zos.write(buffer, 0, length);
+        for (int i = 0; i < archivos.length; i++) {
+          //File srcFile = new File(srcFiles[i]);
+          FileInputStream fis = new FileInputStream(archivos[i]);
+          // begin writing a new ZIP entry, positions the stream to the start of the entry data
+          zos.putNextEntry(new ZipEntry(archivos[i].getName()));
+          int length;
+          while ((length = fis.read(buffer)) > 0) {
+            zos.write(buffer, 0, length);
+          }
+          zos.closeEntry();
+          fis.close();
         }
-
-        zos.closeEntry();
-
-        // close the InputStream
-        fis.close();
-
-      }
-
-      // close the ZipOutputStream
-      zos.close();
+        zos.close();
 
     } catch (IOException ioe) {
       System.out.println("Error creating zip file: " + ioe);
@@ -142,15 +121,10 @@ public class EnvioArch {
     int result = JOptionPane.showConfirmDialog(null, myPanel,
             "Configuración de comunicación", JOptionPane.OK_CANCEL_OPTION);
     if (result == JOptionPane.OK_OPTION) {
-      s[0] = bytes.getText();
-      if (check.isSelected()) {
-        s[1] = "SI";
-      } else {
-        s[1] = "NO";
-      }
-    } else {
-      System.exit(0);
-    }
+        s[0] = bytes.getText();
+        if (check.isSelected())   s[1] = "SI";
+        else                      s[1] = "NO";
+    } else System.exit(0);
     return s;
   }
 }
