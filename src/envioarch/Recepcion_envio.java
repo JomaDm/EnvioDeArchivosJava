@@ -5,10 +5,11 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class Recepcion_envio {
     //recibir
@@ -89,7 +90,7 @@ public class Recepcion_envio {
                   System.out.print("Enviado: " + porcentaje2 + "%\r");          
                 }
                 System.out.print("\nArchivo "+nombre_archivo+" reenviado\n\n");
-
+                descomprimirArchivos(new File("temp.zip"), carpeta);
                 //Cerrar Streams
                 dos.close();
                 dis.close();
@@ -100,5 +101,31 @@ public class Recepcion_envio {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }   
+    }
+    public static void descomprimirArchivos(File zip, String carpeta) {
+    String directorioZip = carpeta + "/";
+    try {
+      ZipInputStream zis = new ZipInputStream(new FileInputStream(directorioZip + zip.getName()));
+      ZipEntry salida;
+      
+      //recorre todo el buffer extrayendo uno a uno cada archivo.zip y creándolos de nuevo en su archivo original 
+      while (null != (salida = zis.getNextEntry())) {
+        System.out.println("Nombre del Archivo: " + salida.getName());
+        FileOutputStream fos = new FileOutputStream(directorioZip + salida.getName());
+        int leer;
+        byte[] buffer = new byte[65536];
+        while (0 < (leer = zis.read(buffer))) {
+          fos.write(buffer, 0, leer);
+        }
+        fos.close();
+        zis.closeEntry();
+      }     
+      zis.close();
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      File z  = new File(directorioZip + zip.getName());
+      z.delete();
+    }
+  }
 }
